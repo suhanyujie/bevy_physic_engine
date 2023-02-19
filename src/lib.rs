@@ -23,6 +23,7 @@ pub fn startup(
         unlit: true,
         ..Default::default()
     });
+    // left particle
     commands
         .spawn_bundle(PbrBundle {
             mesh: sphere.clone(),
@@ -34,6 +35,7 @@ pub fn startup(
             Vec2::new(2., 0.),
         ))
         .insert(Mass(3.));
+    // right particle
     commands
         .spawn_bundle(PbrBundle {
             mesh: sphere.clone(),

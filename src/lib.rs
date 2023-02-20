@@ -50,7 +50,7 @@ pub fn startup(
         transform: Transform::from_translation(Vec3::new(0., 0., 100.)),
         orthographic_projection: bevy::render::camera::OrthographicProjection {
             scale: 0.01,
-            ..Default::default()
+            ..Default::default() 
         },
         ..OrthographicCameraBundle::new_3d()
     });

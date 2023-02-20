@@ -2,7 +2,8 @@
 just for learning
 
 ## dev
-* `cargo watch -cx "run --example simple"`
+* using [cargo watch](https://github.com/watchexec/cargo-watch) 
+    * `cargo watch -cx "run --example simple"`
 * or `cargo run --example simple`
 
 ## ref

@@ -1,7 +1,8 @@
-use bevy::{core::FixedTimestep, prelude::*};
+use bevy::{
+    core::FixedTimestep, prelude::*, reflect::erased_serde::__private::serde::__private::de,
+};
 use bevy_xpbd::*;
 use rand::random;
-
 
 fn main() {
     App::new()
@@ -13,7 +14,7 @@ fn main() {
         .add_system_set(
             SystemSet::new()
                 .with_run_criteria(FixedTimestep::step(1. / 20.))
-                .with_system(spawn_marble),
+                .with_system(spawn_marbles),
         )
         .add_system(despawn_marbles)
         .run();
@@ -32,20 +33,34 @@ fn startup(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    commands.insert_resource(Meshes {
-        sphere: meshes.add(Mesh::from(shape::Icosphere {
-            radius: 1.,
-            subdivisions: 4,
-        })),
+    let sphere = meshes.add(Mesh::from(shape::Icosphere {
+        radius: 1.,
+        subdivisions: 4,
+    }));
+    let blue = materials.add(StandardMaterial {
+        base_color: Color::rgb(0.4, 0.4, 0.6),
+        unlit: true,
+        ..Default::default()
     });
 
-    commands.insert_resource(Materials {
-        blue: materials.add(StandardMaterial {
-            base_color: Color::rgb(0.4, 0.4, 0.6),
-            unlit: true,
+    let radius = 15.;
+    let size = Vec2::new(10., 2.);
+    commands
+        .spawn_bundle(PbrBundle {
+            mesh: meshes.add(Mesh::from(shape::Quad::new(Vec2::ONE))),
+            material: blue.clone(),
+            transform: Transform::from_scale(size.extend(1.)),
             ..Default::default()
-        }),
-    });
+        })
+        .insert_bundle(StaticBoxBundle {
+            pos: Pos(Vec2::new(0., -3.)),
+            collider: BoxCollider { size },
+            ..Default::default()
+        });
+
+    commands.insert_resource(Meshes { sphere });
+
+    commands.insert_resource(Materials { blue });
 
     commands.spawn_bundle(OrthographicCameraBundle {
         transform: Transform::from_translation(Vec3::new(0., 0., 100.)),
